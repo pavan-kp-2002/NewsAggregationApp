@@ -11,9 +11,11 @@ import com.learnandcode.news_aggregator.repositories.CategoryRepository;
 import com.learnandcode.news_aggregator.repositories.ExternalServerRepository;
 import com.learnandcode.news_aggregator.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
+import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,12 +70,13 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public Category addCategory(CategoryDTO categoryNamerequest) {
+        String userId= SecurityContextHolder.getContext().getAuthentication().getName();
         if(categoryRepo.existsByName(categoryNamerequest.getName())){
             throw new RuntimeException("Category already exists");
         }
         Category category = new Category();
         category.setName(categoryNamerequest.getName());
-        return categoryRepo.save(category);
+                return categoryRepo.save(category);
     }
 
     private ExternalServerStatusDTO mapToStatusDTO(ExternalServer server) {
@@ -88,6 +91,7 @@ public class AdminServiceImpl implements AdminService {
         ExternalServerDetailsDTO dto = new ExternalServerDetailsDTO();
         dto.setServerName(server.getServerName());
         dto.setApiKey(server.getApiKey());
+        dto.setEndPoint(server.getEndPoint());
         return dto;
     }
 }

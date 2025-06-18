@@ -1,6 +1,6 @@
 package com.learnandcode.news_aggregator.controller;
 
-import com.learnandcode.news_aggregator.dto.ArticleDaterangeDTO;
+import com.learnandcode.news_aggregator.dto.ArticleDateRangeAndCategoryDTO;
 import com.learnandcode.news_aggregator.model.Article;
 import com.learnandcode.news_aggregator.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +22,8 @@ public class ArticlesController {
     }
 
     @GetMapping("/date-range")
-    public ResponseEntity<List<Article>> getArticlesByDateRange(@RequestBody ArticleDaterangeDTO dateRangeDTO){
-        List<Article> articles = articleService.getArticlesByDateRange(dateRangeDTO);
+    public ResponseEntity<List<Article>> getArticlesByDateRange(@RequestBody ArticleDateRangeAndCategoryDTO dateRangeAndCategoryDTO){
+        List<Article> articles = articleService.getArticlesByDateRangeAndCategory(dateRangeAndCategoryDTO);
         return ResponseEntity.ok(articles);
     }
 

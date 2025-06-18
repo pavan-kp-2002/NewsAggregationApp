@@ -1,6 +1,6 @@
 package com.learnandcode.news_aggregator.service.impl;
 
-import com.learnandcode.news_aggregator.dto.ArticleDaterangeDTO;
+import com.learnandcode.news_aggregator.dto.ArticleDateRangeAndCategoryDTO;
 import com.learnandcode.news_aggregator.model.Article;
 import com.learnandcode.news_aggregator.repositories.ArticleRepository;
 import com.learnandcode.news_aggregator.service.ArticleService;
@@ -25,10 +25,10 @@ public class ArticleServiceImpl implements ArticleService {
     }
 
     @Override
-    public List<Article> getArticlesByDateRange(ArticleDaterangeDTO articleDaterangeDTO) {
-        LocalDateTime start = articleDaterangeDTO.getStartDate().atStartOfDay();
-        LocalDateTime end = articleDaterangeDTO.getEndDate().atTime(23, 59, 59);
-        return articleRepository.findByPublishedAtBetweenAndCategoryId_IdOrderByPublishedAtDesc(start, end, articleDaterangeDTO.getCategoryId());
+    public List<Article> getArticlesByDateRangeAndCategory(ArticleDateRangeAndCategoryDTO articleDateRangeAndCategoryDTO) {
+        LocalDateTime start = articleDateRangeAndCategoryDTO.getStartDate().atStartOfDay();
+        LocalDateTime end = articleDateRangeAndCategoryDTO.getEndDate().atTime(23, 59, 59);
+        return articleRepository.findByPublishedAtBetweenAndCategoryId_IdOrderByPublishedAtDesc(start, end, articleDateRangeAndCategoryDTO.getCategoryId());
     }
 
     @Override

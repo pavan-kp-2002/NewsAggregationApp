@@ -28,6 +28,10 @@ public class Article {
     @JoinColumn(name = "category_id", nullable = false)
     private Category categoryId;
 
+    public Long getArticleId() {
+        return articleId;
+    }
+
     public String getTitle() {
         return title;
     }

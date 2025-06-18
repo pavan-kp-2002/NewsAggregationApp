@@ -18,8 +18,9 @@ public class CategorySetter {
     public Category setCategory(List<String> categories, String title, String description) {
         if(categories != null && !categories.isEmpty()){
             String categoryName = categories.getFirst();
-            return categoryRepository.findByNameIgnoreCase(categoryName)
-                    .orElseGet(() -> categoryRepository.save(new Category(categoryName)));
+            String formattedCategoryName = categoryName.substring(0,1).toUpperCase() + categoryName.substring(1).toLowerCase();
+            return categoryRepository.findByNameStartingWithIgnoreCase(categoryName)
+                    .orElseGet(() -> categoryRepository.save(new Category(formattedCategoryName)));
         }else{
             return categoryResolver.resolveCategory(title, description);
         }

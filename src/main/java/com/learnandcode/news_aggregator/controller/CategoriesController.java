@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -22,7 +23,8 @@ public class CategoriesController {
         return ResponseEntity.ok(categories);
     }
     @PostMapping
-    public ResponseEntity<Category> addCategory(@RequestBody CategoryDTO categoryNameRequest) {
+    public ResponseEntity<Category> addCategory(@RequestBody CategoryDTO categoryNameRequest, Principal principal) {
+        System.out.println(principal);
         Category category = adminService.addCategory(categoryNameRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }

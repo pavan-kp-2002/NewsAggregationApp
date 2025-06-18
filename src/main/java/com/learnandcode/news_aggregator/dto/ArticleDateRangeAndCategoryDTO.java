@@ -2,7 +2,7 @@ package com.learnandcode.news_aggregator.dto;
 
 import java.time.LocalDate;
 
-public class ArticleDaterangeDTO {
+public class ArticleDateRangeAndCategoryDTO {
     private LocalDate startDate;
     private LocalDate endDate;
     private Long categoryId;
@@ -14,8 +14,6 @@ public class ArticleDaterangeDTO {
     public void setCategoryId(Long categoryId) {
         this.categoryId = categoryId;
     }
-
-
 
     public LocalDate getStartDate() {
         return startDate;

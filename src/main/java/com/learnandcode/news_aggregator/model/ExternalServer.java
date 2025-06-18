@@ -14,16 +14,6 @@ public class ExternalServer {
     private String apiKey;
     private String endPoint;
 
-    public String getEndPoint() {
-        return endPoint;
-    }
-
-    public void setEndPoint(String endPoint) {
-        this.endPoint = endPoint;
-    }
-
-
-
     @Enumerated(EnumType.STRING)
     private ServerStatus status;
 
@@ -37,6 +27,14 @@ public class ExternalServer {
         this.apiKey = apiKey;
         this.status = status;
         this.lastAccessed = lastAccessed;
+    }
+
+    public String getEndPoint() {
+        return endPoint;
+    }
+
+    public void setEndPoint(String endPoint) {
+        this.endPoint = endPoint;
     }
 
     public Long getServerId() {

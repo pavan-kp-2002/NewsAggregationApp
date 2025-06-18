@@ -11,12 +11,30 @@ import java.util.Map;
 @Component
 public class CategoryResolver {
     private static final Map<String, List<String>> CATEGORY_MAP = Map.of(
-        "Business", List.of("business", "finance", "economy"),
-        "Entertainment", List.of("entertainment", "arts", "culture"),
-        "Health", List.of("health", "wellness", "medicine"),
-        "Science", List.of("science", "technology", "innovation"),
-        "Sports", List.of("sports", "athletics", "games"),
-        "Technology", List.of("technology", "gadgets", "tech")
+            "Business", List.of(
+                    "business", "finance", "economy", "market", "stocks", "trade", "investment", "corporate", "startup", "entrepreneur",
+                    "merger", "acquisition", "revenue", "profit", "loss", "shareholder", "banking", "commerce", "industry", "tax"
+            ),
+            "Entertainment", List.of(
+                    "entertainment", "arts", "culture", "movies", "music", "tv", "film", "celebrity", "show", "theater",
+                    "festival", "concert", "drama", "comedy", "dance", "actor", "actress", "director", "award", "performance"
+            ),
+            "Health", List.of(
+                    "health", "wellness", "medicine", "fitness", "nutrition", "disease", "mental", "hospital", "doctor", "covid",
+                    "vaccine", "therapy", "surgery", "clinic", "diagnosis", "treatment", "exercise", "diet", "virus", "epidemic"
+            ),
+            "Science", List.of(
+                    "science", "technology", "innovation", "research", "space", "biology", "physics", "chemistry", "discovery", "experiment",
+                    "laboratory", "genetics", "astronomy", "scientist", "theory", "data", "analysis", "evolution", "ecology", "robotics"
+            ),
+            "Sports", List.of(
+                    "sports", "athletics", "games", "football", "soccer", "cricket", "basketball", "tennis", "olympics", "tournament",
+                    "match", "player", "coach", "score", "league", "championship", "medal", "race", "golf", "swimming"
+            ),
+            "Technology", List.of(
+                    "technology", "gadgets", "tech", "software", "hardware", "ai", "artificial intelligence", "computer", "internet", "app",
+                    "robotics", "programming", "coding", "cloud", "cybersecurity", "blockchain", "machine learning", "data science", "mobile", "web"
+            )
     );
 
     @Autowired
