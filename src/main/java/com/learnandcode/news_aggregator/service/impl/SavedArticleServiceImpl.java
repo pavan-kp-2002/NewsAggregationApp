@@ -1,5 +1,8 @@
 package com.learnandcode.news_aggregator.service.impl;
 
+import com.learnandcode.news_aggregator.exception.ArticleNotFoundException;
+import com.learnandcode.news_aggregator.exception.DuplicateSavedArticleException;
+import com.learnandcode.news_aggregator.exception.UserNotFoundException;
 import com.learnandcode.news_aggregator.model.Article;
 import com.learnandcode.news_aggregator.model.SavedArticle;
 import com.learnandcode.news_aggregator.model.User;
@@ -34,7 +37,7 @@ public class SavedArticleServiceImpl implements SavedArticleService {
 
         if(articleOpted.isPresent() && userOpted.isPresent()){
             if(savedArticleRepository.existsByUserAndArticle(userOpted.get(), articleOpted.get())){
-                throw new IllegalArgumentException("Article already saved by this user.");
+                throw new DuplicateSavedArticleException("Article already saved by this user.");
             }
             else{
                 SavedArticle savedArticle = new SavedArticle();
@@ -44,7 +47,7 @@ public class SavedArticleServiceImpl implements SavedArticleService {
             }
         }
         else {
-            throw new IllegalArgumentException("Article with the given ID does not exist");
+            throw new ArticleNotFoundException("Article with the given ID does not exist");
         }
     }
 
@@ -54,10 +57,10 @@ public class SavedArticleServiceImpl implements SavedArticleService {
         Optional<User> userOpted = userRepository.findByUsername(userName);
         Optional<Article> articleOpted = articleRepository.findById(articleId);
         if(articleOpted.isEmpty()){
-            throw new IllegalArgumentException("Article with the given ID does not exist");
+            throw new ArticleNotFoundException("Article with the given ID does not exist");
         }
         if(userOpted.isEmpty()){
-            throw new IllegalArgumentException("User with the given ID does not exist");
+            throw new UserNotFoundException("User with the given username does not exist");
         }
 
         Optional<SavedArticle> savedArticle = savedArticleRepository.findByUserAndArticle(userOpted.get(), articleOpted.get());
@@ -77,7 +80,7 @@ public class SavedArticleServiceImpl implements SavedArticleService {
         if (userOpted.isPresent()) {
             return savedArticleRepository.findAllByUser(userOpted.get());
         } else {
-            throw new IllegalArgumentException("User with the given username does not exist");
+            throw new UserNotFoundException("User with the given username does not exist");
         }
     }
 

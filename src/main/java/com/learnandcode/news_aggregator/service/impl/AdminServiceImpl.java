@@ -4,6 +4,8 @@ import com.learnandcode.news_aggregator.dto.ApiKeyRequestDTO;
 import com.learnandcode.news_aggregator.dto.CategoryDTO;
 import com.learnandcode.news_aggregator.dto.ExternalServerDetailsDTO;
 import com.learnandcode.news_aggregator.dto.ExternalServerStatusDTO;
+import com.learnandcode.news_aggregator.exception.CategoryAlreadyExistsException;
+import com.learnandcode.news_aggregator.exception.ExternalServerNotFoundException;
 import com.learnandcode.news_aggregator.model.Category;
 import com.learnandcode.news_aggregator.model.ExternalServer;
 import com.learnandcode.news_aggregator.model.ServerStatus;
@@ -52,7 +54,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public ExternalServer getExternalServerById(Long id) {
-        return externalServerRepo.findById(id).orElseThrow(() -> new RuntimeException("External server not found with id: " + id));
+        return externalServerRepo.findById(id).orElseThrow(() -> new ExternalServerNotFoundException("External server not found with id: " + id));
     }
 
     @Override
@@ -72,7 +74,7 @@ public class AdminServiceImpl implements AdminService {
     public Category addCategory(CategoryDTO categoryNamerequest) {
         String userId= SecurityContextHolder.getContext().getAuthentication().getName();
         if(categoryRepo.existsByName(categoryNamerequest.getName())){
-            throw new RuntimeException("Category already exists");
+            throw new CategoryAlreadyExistsException("Category already exists");
         }
         Category category = new Category();
         category.setName(categoryNamerequest.getName());

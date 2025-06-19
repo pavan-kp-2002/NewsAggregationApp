@@ -1,4 +1,4 @@
-package com.learnandcode.news_aggregator.dto;
+package com.learnandcode.news_aggregator.newsApi;
 
 import java.util.List;
 

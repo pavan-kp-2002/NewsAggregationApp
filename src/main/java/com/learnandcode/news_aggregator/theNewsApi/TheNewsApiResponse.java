@@ -1,4 +1,4 @@
-package com.learnandcode.news_aggregator.dto;
+package com.learnandcode.news_aggregator.theNewsApi;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

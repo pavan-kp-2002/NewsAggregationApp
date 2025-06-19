@@ -20,7 +20,14 @@ public class CategorySetter {
             String categoryName = categories.getFirst();
             String formattedCategoryName = categoryName.substring(0,1).toUpperCase() + categoryName.substring(1).toLowerCase();
             return categoryRepository.findByNameStartingWithIgnoreCase(categoryName)
-                    .orElseGet(() -> categoryRepository.save(new Category(formattedCategoryName)));
+                    .orElseGet(() ->{
+                        return categoryRepository.findByNameIgnoreCase("All")
+                                .orElseGet(()->{
+                                    Category allCategory = new Category();
+                                    allCategory.setName("All");
+                                    return categoryRepository.save(allCategory);
+                                });
+                    });
         }else{
             return categoryResolver.resolveCategory(title, description);
         }

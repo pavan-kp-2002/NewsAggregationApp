@@ -17,14 +17,12 @@ public class ExternalServerController {
     @Autowired
     private AdminService adminService;
 
-    // For adding a server
     @PostMapping
     public ResponseEntity<ExternalServerDetailsDTO> addExternalServer(@RequestBody ExternalServerDetailsDTO dto) {
         ExternalServerDetailsDTO created = adminService.addExternalServer(dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    // For getting all servers
     @GetMapping
     public ResponseEntity<List<ExternalServerStatusDTO>> getAllServers() {
         List<ExternalServerStatusDTO> servers = adminService.getExternalServersStatus();

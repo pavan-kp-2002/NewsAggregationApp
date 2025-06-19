@@ -23,8 +23,7 @@ public class CategoriesController {
         return ResponseEntity.ok(categories);
     }
     @PostMapping
-    public ResponseEntity<Category> addCategory(@RequestBody CategoryDTO categoryNameRequest, Principal principal) {
-        System.out.println(principal);
+    public ResponseEntity<Category> addCategory(@RequestBody CategoryDTO categoryNameRequest) {
         Category category = adminService.addCategory(categoryNameRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(category);
     }

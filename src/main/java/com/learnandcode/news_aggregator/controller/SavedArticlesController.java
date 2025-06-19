@@ -18,8 +18,6 @@ import java.util.List;
 public class SavedArticlesController {
     @Autowired
     SavedArticleService savedArticleService;
-    @Autowired
-    UserService userService;
 
     @PostMapping("/{id}")
     public ResponseEntity<String> saveArticle(@PathVariable Long id){
