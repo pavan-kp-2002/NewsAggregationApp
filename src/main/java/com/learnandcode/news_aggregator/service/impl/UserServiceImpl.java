@@ -1,6 +1,8 @@
 package com.learnandcode.news_aggregator.service.impl;
 
 import com.learnandcode.news_aggregator.model.User;
+import com.learnandcode.news_aggregator.repositories.CategoryRepository;
+import com.learnandcode.news_aggregator.repositories.UserCategoryConfigurationRepository;
 import com.learnandcode.news_aggregator.repositories.UserRepository;
 import com.learnandcode.news_aggregator.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,7 +12,11 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private UserCategoryConfigurationRepository userNotificationConfigurationRepository;
     @Override
     public User getUserByUserName(String userName) {
         return userRepository.findByUsername(userName)
@@ -25,6 +31,7 @@ public class UserServiceImpl implements UserService {
         else if(userRepository.existsByUsername(user.getUsername())){
             throw new IllegalArgumentException("A user with this username already exists.");
         }
+
         return userRepository.save(user);
     }
 

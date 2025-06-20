@@ -6,19 +6,19 @@ import com.learnandcode.news_aggregator.dto.ExternalServerDetailsDTO;
 import com.learnandcode.news_aggregator.dto.ExternalServerStatusDTO;
 import com.learnandcode.news_aggregator.exception.CategoryAlreadyExistsException;
 import com.learnandcode.news_aggregator.exception.ExternalServerNotFoundException;
-import com.learnandcode.news_aggregator.model.Category;
-import com.learnandcode.news_aggregator.model.ExternalServer;
-import com.learnandcode.news_aggregator.model.ServerStatus;
+import com.learnandcode.news_aggregator.model.*;
 import com.learnandcode.news_aggregator.repositories.CategoryRepository;
 import com.learnandcode.news_aggregator.repositories.ExternalServerRepository;
+import com.learnandcode.news_aggregator.repositories.UserCategoryConfigurationRepository;
+import com.learnandcode.news_aggregator.repositories.UserRepository;
 import com.learnandcode.news_aggregator.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 
-import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,9 +26,12 @@ import java.util.stream.Collectors;
 public class AdminServiceImpl implements AdminService {
     @Autowired
     private ExternalServerRepository externalServerRepo;
-
     @Autowired
     private CategoryRepository categoryRepo;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserCategoryConfigurationRepository userNotificationConfigurationRepository;
 
     @Override
     public ExternalServerDetailsDTO addExternalServer(ExternalServerDetailsDTO dto) {
@@ -78,7 +81,19 @@ public class AdminServiceImpl implements AdminService {
         }
         Category category = new Category();
         category.setName(categoryNamerequest.getName());
-                return categoryRepo.save(category);
+        category = categoryRepo.save(category);
+        List<User> users = userRepository.findByUserRole(UserRole.USER);
+        List<UserCategoryConfiguration> configurations = new ArrayList<>();
+        for(User user : users){
+            UserCategoryConfiguration configuration = new UserCategoryConfiguration();
+            configuration.setUser(user);
+            configuration.setCategory(category);
+            configuration.setNotificationConfigurationStatus(NotificationConfigurationStatus.DISABLED);
+            configurations.add(configuration);
+        }
+        userNotificationConfigurationRepository.saveAll(configurations);
+
+        return category;
     }
 
     private ExternalServerStatusDTO mapToStatusDTO(ExternalServer server) {
