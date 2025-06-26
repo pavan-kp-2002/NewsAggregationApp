@@ -1,6 +1,8 @@
 package com.learnandcode.news_aggregator.controller;
 
+import com.learnandcode.news_aggregator.dto.UserCategoryConfigurationDTO;
 import com.learnandcode.news_aggregator.model.Category;
+import com.learnandcode.news_aggregator.model.UserCategoryConfiguration;
 import com.learnandcode.news_aggregator.service.AdminService;
 import com.learnandcode.news_aggregator.service.UserCategoryConfigurationService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,12 +21,16 @@ public class CategoryConfigurationController {
     @Autowired
     private UserCategoryConfigurationService categoryConfigurationService;
 
+//    @GetMapping
+//    public ResponseEntity<List<Category>> getAllCategories() {
+//        return ResponseEntity.ok(adminService.getAllCategories());
+//    }
     @GetMapping
-    public ResponseEntity<List<Category>> getAllCategories() {
-        return ResponseEntity.ok(adminService.getAllCategories());
+    public ResponseEntity<List<UserCategoryConfigurationDTO>> getUserCategoryConfigurations() {
+        List<UserCategoryConfigurationDTO> configurations = categoryConfigurationService.getUserCategoryConfigurations();
+        return ResponseEntity.ok(configurations);
     }
-
-    @PostMapping()
+    @PostMapping("/edit")
     public ResponseEntity<String> editCategoryConfiguration(@RequestBody String categoryName) {
         boolean updated = categoryConfigurationService.editCategoryConfiguration(categoryName);
 
@@ -34,6 +40,19 @@ public class CategoryConfigurationController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Category not found or no configuration exists.");
         }
+    }
+
+    @PostMapping
+    public ResponseEntity<String> addNewCategoryConfiguration(@RequestBody String categoryName) {
+        boolean added = categoryConfigurationService.addCategoryConfiguration(categoryName);
+
+        if(added){
+            return ResponseEntity.status(HttpStatus.CREATED)
+                    .body("New Category configuration added successfully");
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Category configuration already exists");
+            }
     }
 }
 

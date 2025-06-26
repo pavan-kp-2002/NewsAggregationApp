@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class NewsFetchServiceImpl implements NewsFetchService {
@@ -30,7 +32,7 @@ public class NewsFetchServiceImpl implements NewsFetchService {
 
 
     //private final long fetchInterval = 4 * 60 * 60 * 1000;
-    private final long testInterval = 1 * 60 * 60 * 1000; // for testing
+    private final long testInterval = 1 * 60 * 60 * 1000;// for testing
     @Override
     @Scheduled(fixedRate = testInterval)
     public void fetchArticlesFromAllExternalApis() {
@@ -43,6 +45,7 @@ public class NewsFetchServiceImpl implements NewsFetchService {
                 articleRepository.saveAll(articles);
 
                 for (Article article : articles) {
+                    Set<Long> notifieduserIds = new HashSet<>();
                     List<Notification> notificationsToSave = new ArrayList<>();
 
                     if (article.getCategoryId() != null) {
@@ -51,18 +54,26 @@ public class NewsFetchServiceImpl implements NewsFetchService {
                                         article.getCategoryId(), NotificationConfigurationStatus.ENABLED);
 
                         for (UserCategoryConfiguration config : categoryConfigs) {
-                            Notification notification = new Notification();
-                            notification.setArticle(article);
-                            notification.setUser(config.getUser());
-                            notification.setNotificationRead(false);
-                            notification.setEmailSent(false);
-                            notificationsToSave.add(notification);
+                            long userId = config.getUser().getUserId();
+                            if(!notifieduserIds.contains(userId)){
+                                Notification notification = new Notification();
+                                notification.setArticle(article);
+                                notification.setUser(config.getUser());
+                                notification.setNotificationRead(false);
+                                notification.setEmailSent(false);
+                                notificationsToSave.add(notification);
+                                notifieduserIds.add(userId);
+                            }
+
                         }
                     }
 
                     // 2. Keyword-based notifications
                     List<UserKeywordConfiguration> keywordConfigs = userKeywordConfigurationRepo.findBykeywordConfigurationStatus(NotificationConfigurationStatus.ENABLED);
                     for (UserKeywordConfiguration config : keywordConfigs) {
+                        long userId = config.getUser().getUserId();
+                        if(notifieduserIds.contains(userId)) continue;
+
                         String keyword = config.getKeyword().toLowerCase();
                         if ((article.getTitle() != null && article.getTitle().toLowerCase().contains(keyword)) ||
                                 (article.getDescription() != null && article.getDescription().toLowerCase().contains(keyword))) {
@@ -73,6 +84,7 @@ public class NewsFetchServiceImpl implements NewsFetchService {
                             notification.setNotificationRead(false);
                             notification.setEmailSent(false);
                             notificationsToSave.add(notification);
+                            notifieduserIds.add(userId);
                         }
                     }
 

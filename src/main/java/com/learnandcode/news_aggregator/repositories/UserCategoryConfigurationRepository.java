@@ -15,4 +15,6 @@ public interface UserCategoryConfigurationRepository extends JpaRepository<UserC
             NotificationConfigurationStatus status
     );
     Optional<UserCategoryConfiguration> findByUserAndCategory(User user, Category category);
+
+    List<UserCategoryConfiguration> findAllByUser(User user);
 }
