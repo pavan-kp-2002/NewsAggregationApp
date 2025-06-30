@@ -4,8 +4,9 @@ import com.learnandcode.news_aggregator.dto.LoginRequestDTO;
 import com.learnandcode.news_aggregator.dto.SignupRequestDTO;
 import com.learnandcode.news_aggregator.dto.SignupResponseDTO;
 import com.learnandcode.news_aggregator.exception.*;
-import com.learnandcode.news_aggregator.model.User;
-import com.learnandcode.news_aggregator.model.UserRole;
+import com.learnandcode.news_aggregator.model.*;
+import com.learnandcode.news_aggregator.repositories.CategoryRepository;
+import com.learnandcode.news_aggregator.repositories.UserCategoryConfigurationRepository;
 import com.learnandcode.news_aggregator.repositories.UserRepository;
 import com.learnandcode.news_aggregator.service.AuthenticationService;
 import com.learnandcode.news_aggregator.service.util.JwtUtils;
@@ -14,11 +15,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
     private UserRepository userRepository;
-
+    @Autowired
+    private CategoryRepository categoryRepository;
+    @Autowired
+    private UserCategoryConfigurationRepository userNotificationConfigurationRepository;
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
@@ -34,7 +41,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         user.setUserRole(UserRole.USER);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
 
-        userRepository.save(user);
+        User createdUser = userRepository.save(user);
+
+        List<Category> allCategories = categoryRepository.findAll();
+        List<UserCategoryConfiguration> configurations = new ArrayList<>();
+
+        for(Category category : allCategories){
+            UserCategoryConfiguration configuration = new UserCategoryConfiguration();
+            configuration.setUser(createdUser);
+            configuration.setCategory(category);
+            configuration.setNotificationConfigurationStatus(NotificationConfigurationStatus.DISABLED);
+            configurations.add(configuration);
+        }
+        userNotificationConfigurationRepository.saveAll(configurations);
 
         return new SignupResponseDTO("User registered successfully", user.getUsername(), user.getEmail());
     }
